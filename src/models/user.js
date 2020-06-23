@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const {
     isEmail
 } = require('validator').default;
 
-const User = mongoose.model('User', {
+const schema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -33,5 +34,19 @@ const User = mongoose.model('User', {
         }
     }
 })
+
+//MIDDLEWAREs (allows to enforce change without needing to look at multiple places)
+schema.pre('save', async function (next) {
+    const user = this
+
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8)
+    }
+
+    next()
+})
+
+const User = mongoose.model('User', schema)
+
 
 module.exports = User
