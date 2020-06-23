@@ -21,7 +21,7 @@ const User = mongoose.model('User', {
     },
     age: {
         type: Number,
-        min: 2,
+        default: 0
     },
     password: {
         type: String,

@@ -6,22 +6,8 @@ const dbName = '/task-manager-api'
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 }
 
 mongoose.connect(url + dbName, options)
-
-
-//Will use later
-/* const Task = mongoose.model('Task', {
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    completed: {
-        type: Boolean,        
-        default: false
-    }
-})
- */
