@@ -43,7 +43,7 @@ router
         if (!isValidUpdate) return res.status(400).send({
             error: 'Invalid update!'
         })
-        
+
         try {
             const task = await Task.findById(_id)
 

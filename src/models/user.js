@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {
     isEmail
 } = require('validator').default;
@@ -13,6 +14,7 @@ const schema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true,
         trim: true,
         lowercase: true,
@@ -32,10 +34,45 @@ const schema = new mongoose.Schema({
         validate(v) {
             if (v.toLowerCase() === 'password') throw new Error('Password can\'t be equal to "password"')
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
 
-//MIDDLEWAREs (allows to enforce change without needing to look at multiple places)
+schema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({
+        email
+    })
+
+    if (!user) throw new Error('Unable to login. Checkout your email or password.')
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) throw new Error('Unable to login. Checkout your email or password.')
+
+    return user
+}
+
+// Generate user jsonWebToken
+schema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = jwt.sign({
+        _id: user._id.toString()
+    }, 'cat')
+
+    user.tokens = [...user.tokens, {
+        token
+    }]
+    await user.save()
+
+    return token
+}
+
+//Hash the plain text password before saving
 schema.pre('save', async function (next) {
     const user = this
 

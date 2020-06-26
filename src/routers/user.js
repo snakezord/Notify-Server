@@ -9,9 +9,28 @@ router
         const user = new User(req.body)
         try {
             await user.save()
-            res.status(201).send(user)
+            const token = await user.generateAuthToken()
+            res.status(201).send({
+                user,
+                token
+            })
+            console.log('signed up')
         } catch (error) {
             res.status(400).send(error)
+        }
+    })
+    .post('/users/login', async (req, res) => {
+        try {
+            const user = await User.findByCredentials(req.body.email, req.body.password)
+            const token = await user.generateAuthToken()
+
+            res.send({
+                user,
+                token
+            })
+            console.log('logged in')
+        } catch (error) {
+            res.status(400).send()
         }
     })
     .get('/users', async (req, res) => {
@@ -19,7 +38,7 @@ router
             const users = await User.find({})
             res.send(users)
         } catch (error) {
-            res.status(500).send()
+            res.status(500).send(error)
         }
     })
     .get('/users/:id', async (req, res) => {
@@ -46,17 +65,17 @@ router
         })
 
         try {
-            const user = await User.findById(_id)        
-
+            const user = await User.findById(_id)
+            
             // DOESN'T TRIGGER THE SAVE MIDDLEWARE!
             /* const user = await User.findByIdAndUpdate(_id, body, {
                 new: true,
                 runValidators: true
             }) */
             if (!user) return res.status(404).send()
-            
-             updates.forEach((update) => user[update] = body[update])
-             await user.save()
+
+            updates.forEach((update) => user[update] = body[update])
+            await user.save()
 
             res.send(user)
         } catch (error) {

@@ -2,6 +2,7 @@ const express = require('express');
 require('./db/mongoose');
 const userRouter = require('./routers/user');
 const taskRouter = require('./routers/task');
+const jwt = require('jsonwebtoken');
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -13,5 +14,15 @@ app
     .use(taskRouter)
 
     .listen(port, () => {
-        console.log('Server is up on port ' + port)
+        console.log('Server is up on p ort ' + port)
     })
+
+/* const myFunc = async () => {
+    const token = jwt.sign({_id: 'abc123'}, 'cat')
+    console.log(token)
+
+    const data = jwt.verify(token, 'cat')
+    console.log(data)
+}
+
+myFunc() */
