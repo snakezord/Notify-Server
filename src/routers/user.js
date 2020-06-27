@@ -23,30 +23,41 @@ router
         try {
             const user = await User.findByCredentials(req.body.email, req.body.password)
             const token = await user.generateAuthToken()
+
             res.send({
                 user,
                 token
             })
         } catch (error) {
-            res.status(400).send()
+            res.status(400).send(error)
+        }
+    })
+    .post('/users/logout', auth, async (req, res) => {
+        try {
+            req.user.tokens = req.user.tokens.filter((token) => token.token !== req.token)
+            await req.user.save()
+
+            res.send()
+        } catch (error) {
+            res.status(500).send()
+        }
+    })
+    .post('/users/logoutAll', auth, async (req, res) => {
+        try {
+            req.user.tokens = []
+            await req.user.save()
+
+            res.send()
+        } catch (error) {
+            res.status(500).send()
         }
     })
     .get('/users/me', auth, async (req, res) => {
         res.send(req.user)
     })
-    .get('/users/:id', async (req, res) => {
-        const _id = req.params.id
-
-        try {
-            const user = await User.findById(_id)
-            if (!user) return res.status(404).send()
-            res.send(user)
-        } catch (error) {
-            res.status(500).send()
-        }
-    })
-    .patch('/users/:id', async (req, res) => {
-        const _id = req.params.id
+    .patch('/users/me', auth, async (req, res) => {
+        const user = req.user
+        const _id = user.id
         const body = req.body
 
         const updates = Object.keys(body)
@@ -58,10 +69,6 @@ router
         })
 
         try {
-            const user = await User.findById(_id)
-
-            if (!user) return res.status(404).send()
-
             updates.forEach((update) => user[update] = body[update])
             await user.save()
 
@@ -70,13 +77,12 @@ router
             res.status(400).send(error)
         }
     })
-    .delete('/users/:id', async (req, res) => {
-        const _id = req.params.id
+    .delete('/users/me', auth, async (req, res) => {
+        const _id = req.user._id
 
-        try {
-            const deleted = await User.findByIdAndDelete(_id)
-            if (!deleted) return res.status(404).send()
-            res.send(deleted)
+        try {            
+            await req.user.remove()
+            res.send(req.user)
         } catch (error) {
             res.status(500).send()
         }
