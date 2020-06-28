@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Task = require('./task');
 const {
     isEmail
 } = require('validator').default;
@@ -41,6 +42,12 @@ const schema = new mongoose.Schema({
             required: true
         }
     }]
+})
+
+schema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'user'
 })
 
 schema.statics.findByCredentials = async (email, password) => {
@@ -90,6 +97,17 @@ schema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
+
+    next()
+})
+
+// Delete user tasks when user is removed
+schema.pre('remove', async function (next) {
+    const user = this
+
+    await Task.deleteMany({
+        user: user._id
+    })
 
     next()
 })

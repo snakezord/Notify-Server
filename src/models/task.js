@@ -9,17 +9,22 @@ const schema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
-    }
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    } 
 })
 
-schema.pre('save', async function (next) {
-    const task = this
+// schema.pre('save', async function (next) {
+//     const task = this
 
-    //todo
-    console.log('Before save task!')
+//     //todo
+//     //console.log('Before save task!')
 
-    next()
-})
+//     next()
+// })
 
 const Task = mongoose.model('Task', schema)
 

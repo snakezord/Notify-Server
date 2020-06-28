@@ -20,15 +20,15 @@ router
         }
     })
     .post('/users/login', async (req, res) => {
-        try {
-            const user = await User.findByCredentials(req.body.email, req.body.password)
+        try {            
+            const user = await User.findByCredentials(req.body.email, req.body.password)            
             const token = await user.generateAuthToken()
-
             res.send({
                 user,
                 token
             })
         } catch (error) {
+            error = JSON.stringify(error.message, Object.getOwnPropertyNames(error))
             res.status(400).send(error)
         }
     })
