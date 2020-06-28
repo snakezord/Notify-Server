@@ -15,6 +15,8 @@ const schema = new mongoose.Schema({
         required: true,
         ref: 'User'
     } 
+}, {
+    timestamps: true
 })
 
 // schema.pre('save', async function (next) {
