@@ -1,6 +1,10 @@
 const express = require('express');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
+const {
+    sendWelcomeEmail,
+    sendByeEmail
+} = require('../emails/account');
 
 const router = new express.Router()
 
@@ -9,6 +13,7 @@ router
     .post('/users', async (req, res) => {
         const user = new User(req.body)
         try {
+            sendWelcomeEmail(user)
             await user.save()
             const token = await user.generateAuthToken()
             res.status(201).send({
@@ -59,8 +64,7 @@ router
         res.send(req.user)
     })
     .patch('/users/me', auth, async (req, res) => {
-        const user = req.user
-        const _id = user.id
+        const user = req.user 
         const body = req.body
 
         const updates = Object.keys(body)
@@ -83,9 +87,11 @@ router
         }
     })
     .delete('/users/me', auth, async (req, res) => {
+        const user = req.user
         try {
-            await req.user.remove()
-            res.send(req.user)
+            sendByeEmail(user)            
+            await user.remove()
+            res.send(user)
         } catch (error) {
             res.status(500).send()
         }
