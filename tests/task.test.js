@@ -46,5 +46,5 @@ test('should not delete task of other user', async () => {
 
     const task = Task.findById(taskThree._id)
     expect(task).not.toBeNull();
-    
+
 });
