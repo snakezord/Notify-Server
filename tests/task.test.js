@@ -19,6 +19,7 @@ test('should create task for user', async () => {
         .post('/tasks')
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
         .send({
+            title: 'Some title',
             description: 'Some task'
         }).expect(201)
 
