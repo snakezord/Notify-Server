@@ -2,17 +2,18 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
     title: {
-        type: String,
-        required: true,
-        trim: true
+        type: String,        
+        trim: true,
+        default: ''
     },
     description: {
-        type: String,
-        required: true,
-        trim: true
+        type: String,     
+        trim: true,
+        default: ''
     },
     background: {
-        type: String,      
+        type: String,
+        trim: true,
         default: '#fff'
     },
     completed: {
