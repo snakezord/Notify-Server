@@ -11,6 +11,10 @@ const schema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    background: {
+        type: String,      
+        default: '#fff'
+    },
     completed: {
         type: Boolean,
         default: false
