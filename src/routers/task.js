@@ -70,7 +70,7 @@ router
         const user = req.user
 
         const updates = Object.keys(body)
-        const allowedUpdates = ['title', 'description', 'background', 'completed']
+        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived']
         const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
         
         if (!isValidUpdate) return res.status(400).send({

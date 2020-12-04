@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
         default: ''
     },
     description: {
-        type: String,     
+        type: String,
         trim: true,
         default: ''
     },
@@ -17,6 +17,14 @@ const schema = new mongoose.Schema({
         default: '#fff'
     },
     completed: {
+        type: Boolean,
+        default: false
+    },
+    isPinned: {
+        type: Boolean,
+        default: false
+    },
+    isArchived: {
         type: Boolean,
         default: false
     },

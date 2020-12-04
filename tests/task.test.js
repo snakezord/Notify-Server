@@ -44,7 +44,7 @@ test('should not delete task of other user', async () => {
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
         .send()
         .expect(404)
-
+    
     const task = Task.findById(taskThree._id)
     expect(task).not.toBeNull();
 
