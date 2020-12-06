@@ -28,6 +28,10 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isRemoved: {
+        type: Boolean,
+        default: false
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
