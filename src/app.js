@@ -10,6 +10,7 @@ const app = express()
 //Without Middleware: new req -> run route handler
 //With Middleware: new req -> do something -> run route handler
 app
+    .use(cors())
     .use(express.json())
     .use(userRouter)
     .use(avatarRouter)
