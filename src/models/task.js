@@ -18,7 +18,7 @@ const schema = new mongoose.Schema({
     },
     completed: {
         type: Boolean,
-        default: false
+        default: false,        
     },
     isPinned: {
         type: Boolean,
@@ -30,7 +30,11 @@ const schema = new mongoose.Schema({
     },
     isRemoved: {
         type: Boolean,
-        default: false
+        default: false,    
+    },
+    expireAt: {
+            type: Date,
+            default: null,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -40,6 +44,16 @@ const schema = new mongoose.Schema({
 }, {
     timestamps: true
 })
+
+schema.index({
+        expireAt: 1
+    },
+    {
+        expireAfterSeconds: 0, 
+    }    
+)
+
+
 
 // schema.pre('save', async function (next) {
 //     const task = this

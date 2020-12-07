@@ -70,20 +70,30 @@ router
         const user = req.user
 
         const updates = Object.keys(body)
-        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'isRemoved']
+        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'isRemoved', 'expireAt']
         const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
         
         if (!isValidUpdate) return res.status(400).send({
             error: 'Invalid update!'
         })
         
+        const myDate = new Date();
+        const newDate = new Date(myDate);
+        newDate.setMinutes(newDate.getMinutes() + 1);
+
+        body['expireAt'] = newDate
+        updates.push('expireAt')
+        
+
+        console.log(body)
+        console.log(updates)
         try {
             const task = await Task.findOne({
                 _id,
                 user: user._id
-            })
+            })            
             if (!task) return res.status(404).send()
-
+            
             updates.forEach((update) => task[update] = body[update])
             await task.save()
 
