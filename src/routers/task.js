@@ -77,16 +77,15 @@ router
             error: 'Invalid update!'
         })
         
-        const myDate = new Date();
-        const newDate = new Date(myDate);
-        newDate.setMinutes(newDate.getMinutes() + 1);
+        // const myDate = new Date();
+        // const newDate = new Date(myDate);
+        // newDate.setMinutes(newDate.getMinutes() + 1);
 
-        body['expireAt'] = newDate
-        updates.push('expireAt')
-        
+        // body['expireAt'] = newDate
+        // updates.push('expireAt')
 
-        console.log(body)
-        console.log(updates)
+        // console.log(body)
+        // console.log(updates)
         try {
             const task = await Task.findOne({
                 _id,
