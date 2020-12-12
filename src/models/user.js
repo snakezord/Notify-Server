@@ -114,7 +114,7 @@ schema.pre('remove', async function (next) {
     await Task.deleteMany({
         user: user._id
     })
-
+    
     next()
 })
 

@@ -33,7 +33,7 @@ router
             const value = parts[1]
             sort[key] = value === 'asc' ? 1 : value === 'desc' ? -1 : 0
         }
-
+        
         try {
             await user.populate({
                 path: 'tasks',
@@ -70,7 +70,7 @@ router
         const user = req.user
 
         const updates = Object.keys(body)
-        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'isRemoved', 'expireAt']
+        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'isRemoved', 'expireAt', 'position']
         const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
         
         if (!isValidUpdate) return res.status(400).send({

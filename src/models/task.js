@@ -28,9 +28,9 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    isRemoved: {
-        type: Boolean,
-        default: false,    
+    position: {
+        type: Number,
+        default: undefined,
     },
     expireAt: {
             type: Date,
