@@ -30,7 +30,7 @@ const schema = new mongoose.Schema({
     },
     position: {
         type: Number,
-        default: undefined,
+        default: null,
     },
     expireAt: {
             type: Date,
