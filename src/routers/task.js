@@ -24,7 +24,7 @@ router
         const query = req.query
         const match = {}
         const sort = {}
-
+        
         if (query.completed) match.completed = query.completed === 'true'
 
         if (query.sortBy) {
