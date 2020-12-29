@@ -22,11 +22,7 @@ const schema = new mongoose.Schema({
         validate(v) {
             if (!isEmail(v)) throw new Error('Email is invalid')
         }
-    },
-    age: {
-        type: Number,
-        default: 0
-    },
+    },    
     password: {
         type: String,
         required: true,
@@ -44,6 +40,9 @@ const schema = new mongoose.Schema({
     }],
     avatar: {
         type: Buffer
+    },
+    googlePicture: {
+        type: String
     }
 }, {
     timestamps: true
@@ -86,8 +85,8 @@ schema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({
         _id: user._id.toString()
-    }, process.env.JWT_SECRET)
-
+    }, process.env.JWT_SECRET, { expiresIn: '24h'})
+    
     user.tokens = [...user.tokens, {
         token
     }]
@@ -108,7 +107,7 @@ schema.pre('save', async function (next) {
 })
 
 // Delete user tasks when user is removed
-schema.pre('remove', async function (next) {
+schema.pre('remove', async function (next) {    
     const user = this
 
     await Task.deleteMany({

@@ -44,7 +44,7 @@ router
                     sort
                 }
             }).execPopulate()
-            res.send(user.tasks)
+            res.send(user.tasks)            
         } catch (error) {
             res.status(500).send()
         }
@@ -70,22 +70,13 @@ router
         const user = req.user
 
         const updates = Object.keys(body)
-        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'isRemoved', 'expireAt', 'position']
+        const allowedUpdates = ['title', 'description', 'background', 'completed', 'isPinned', 'isArchived', 'expireAt', 'position']
         const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
         
         if (!isValidUpdate) return res.status(400).send({
             error: 'Invalid update!'
         })
-        
-        // const myDate = new Date();
-        // const newDate = new Date(myDate);
-        // newDate.setMinutes(newDate.getMinutes() + 1);
-
-        // body['expireAt'] = newDate
-        // updates.push('expireAt')
-
-        // console.log(body)
-        // console.log(updates)
+                
         try {
             const task = await Task.findOne({
                 _id,
@@ -101,9 +92,9 @@ router
             res.status(400).send(error)
         }
     })
-    .delete('/tasks/:id', auth, async (req, res) => {
+    .delete('/tasks/:id', auth, async (req, res) => {        
         const _id = req.params.id
-        const user = req.user
+        const user = req.user        
         try {
             const deleted = await Task.findOneAndDelete({
                 _id,

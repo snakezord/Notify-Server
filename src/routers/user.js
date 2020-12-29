@@ -5,6 +5,9 @@ const {
     sendWelcomeEmail,
     sendByeEmail
 } = require('../emails/account');
+const { OAuth2Client } = require('google-auth-library');
+
+const googleClient = new OAuth2Client("453554487997-jact340aibie5td0co3tdesi5cku6dd1.apps.googleusercontent.com");
 
 const router = new express.Router()
 
@@ -40,6 +43,49 @@ router
             })
         }
     })
+    .post('/users/google/login', async (req, res) => {
+        try {
+            const { tokenId } = req.body
+            const response = await googleClient.verifyIdToken({idToken: tokenId, audience: "453554487997-jact340aibie5td0co3tdesi5cku6dd1.apps.googleusercontent.com"})                        
+            const { email_verified, name, email, picture } = response.payload
+
+            if(!email_verified) return res.status(400).send({
+                error: 'Unable to sign in. Google email unverified!'
+            }) 
+
+            const user = await User.findOne({ email })            
+
+            if (!user) {                
+                const password = email + process.env.JWT_SECRET
+                const user = new User({
+                    name, 
+                    email, 
+                    password, 
+                    googlePicture: picture
+                })
+
+                await user.save()
+                const token = await user.generateAuthToken()
+                
+                sendWelcomeEmail(user)
+
+                res.status(201).send({
+                    user,
+                    token
+                })
+            }else {                             
+                const token = await user.generateAuthToken()
+                res.send({
+                    user,
+                    token
+                })
+            }
+        } catch (error) {
+            res.status(400).send({
+                error: error.message
+            })            
+        }
+    })
     .post('/users/logout', auth, async (req, res) => {
         try {
             req.user.tokens = req.user.tokens.filter((token) => token.token !== req.token)
@@ -68,7 +114,7 @@ router
         const body = req.body
 
         const updates = Object.keys(body)
-        const allowedUpdates = ['name', 'email', 'age', 'password']
+        const allowedUpdates = ['name', 'email', 'password']
         const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
 
         if (!isValidUpdate) return res.status(400).send({

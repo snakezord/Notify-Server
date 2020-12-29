@@ -33,8 +33,8 @@ const schema = new mongoose.Schema({
         default: null,
     },
     expireAt: {
-            type: Date,
-            default: null,
+        type: Date,
+        default: null,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -52,8 +52,6 @@ schema.index({
         expireAfterSeconds: 0, 
     }    
 )
-
-
 
 // schema.pre('save', async function (next) {
 //     const task = this

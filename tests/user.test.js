@@ -99,8 +99,7 @@ test('should upload avatar image', async () => {
 
 test('should update valid user fields', async () => {
     const newUser = {
-        name: 'Roman',
-        age: 24
+        name: 'Roman'        
     }
     await request(app)
         .patch('/users/me')
@@ -108,8 +107,7 @@ test('should update valid user fields', async () => {
         .send(newUser)
         .expect(200)
     const user = await User.findById(userOneId)
-    expect({
-        age: user.age,
+    expect({        
         name: user.name
     }).toEqual(newUser)
 });
