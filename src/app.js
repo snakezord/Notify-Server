@@ -15,19 +15,7 @@ app
     .use(cors())
     .use(userRouter)
     .use(avatarRouter)
-    .use(taskRouter)
-    app.get("*", (req, res) => {
-      let protected = ['transformed.js', 'main.css', 'favicon.ico']
+    .use(taskRouter)    
 
-      let path = req.params['0'].substring(1)
-      
-      if (protected.includes(path)) {
-        // Return the actual file
-        res.sendFile(`${__dirname}/build/${path}`);
-      } else {
-        // Otherwise, redirect to /build/index.html
-        res.sendFile(`${__dirname}/build/index.html`);
-      }
-  });
-
+    
 module.exports = app
