@@ -15,7 +15,7 @@ app
     .use(cors())
     .use(userRouter)
     .use(avatarRouter)
-    .use(taskRouter)    
+    .use(taskRouter)
 
-    
+
 module.exports = app

@@ -80,6 +80,24 @@ schema.methods.toJSON = function () {
     return userObject
 }
 
+schema.methods.addDefaultNote = async function () {
+    const user = this
+    
+    const task = new Task({
+        title: 'Hello 👋',
+        description: `-This is my Notes App 📔
+                      -You can add different notes
+                      -You can Drag and Drop notes
+                      -You can edit notes by clicking on them 🖱️
+                      -And more...
+                      -Please try it out 😃`,
+        background: '#FCF475',
+        user: user._id
+    })
+
+    await task.save()    
+}
+
 // Generate user jsonWebToken
 schema.methods.generateAuthToken = async function () {
     const user = this

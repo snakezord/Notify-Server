@@ -68,6 +68,7 @@ router
                 const token = await user.generateAuthToken()
                 
                 sendWelcomeEmail(user)
+                await user.addDefaultNote()
 
                 res.status(201).send({
                     user,
